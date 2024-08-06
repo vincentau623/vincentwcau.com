@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Vincent Au",
   description: "Personal website of Vincent Au",
-  };
+};
 
 export default function RootLayout({
   children,
@@ -20,8 +20,12 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <body className={inter.className}>
         <Providers>
-          <NavBar/>
-          {children}
+          <main className="min-h-screen bg-gradient-to-tr from-slate-900 to-slate-700">
+            <NavBar />
+            <div className="p-4">
+              {children}
+            </div>
+          </main>
         </Providers>
       </body>
     </html>

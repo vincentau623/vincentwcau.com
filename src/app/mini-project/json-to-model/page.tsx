@@ -1,5 +1,6 @@
 "use client";
 
+import TitleBar from "@/components/TitleBar";
 import { Button, Code, Textarea } from "@nextui-org/react";
 import { useState } from "react";
 
@@ -66,27 +67,31 @@ const JsonToModelPage = () => {
 
 
   return (
-    <main className="min-h-screen">
-      <div>JSON to Model Converter</div>
-      <div>Input:</div>
-      <div className="w-full flex flex-col gap-2 max-w-[240px]">
-        <Textarea
-          variant="underlined"
-          placeholder="Enter your JSON"
-          value={jsonValue}
-          onValueChange={setJsonValue}
-        />
+    <>
+      <TitleBar title="JSON to Model Converter" />
+      <div className="container">
+        <div className="grid grid-flow-row auto-rows-max gap-4">
+          <div>Input:</div>
+          <div className="w-full flex flex-col gap-2 max-w-[240px]">
+            <Textarea
+              variant="underlined"
+              placeholder="Enter your JSON"
+              value={jsonValue}
+              onValueChange={setJsonValue}
+            />
+          </div>
+          <div>
+            <Button color="primary" onPress={() => convertJsonToModel()}>
+              Convert
+            </Button>
+          </div>
+          <div>
+            <div>Output:</div>
+            <Code style={{ whiteSpace: 'pre' }}>{output}</Code>
+          </div>
+        </div>
       </div>
-      <div>
-        <Button color="primary" onPress={() => convertJsonToModel()}>
-          Convert
-        </Button>
-      </div>
-      <div>
-        <div>Output:</div>
-        <Code style={{ whiteSpace: 'pre' }}>{output}</Code>
-      </div>
-    </main>);
+    </>);
 };
 
 export default JsonToModelPage;

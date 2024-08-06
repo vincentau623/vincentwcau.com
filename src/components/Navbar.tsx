@@ -1,40 +1,69 @@
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Button } from "@nextui-org/react";
+'use client';
+
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Button, NavbarMenuToggle, NavbarMenu, NavbarMenuItem } from "@nextui-org/react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
 
 
 const NavBar = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
+
+  const menuItems = [
+    { title: "About Me", href: "/about-me" },
+    { title: "Mini Projects", href: "/mini-project" },
+  ];
+
+  const handleMenuItemClick = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
-    <Navbar>
+    <Navbar
+      isBordered
+      onMenuOpenChange={setIsMenuOpen}
+      isMenuOpen={isMenuOpen}>
       <NavbarBrand>
-        <p className="font-bold text-inherit">Vincent AU</p>
+        <Link href="/">
+          <p className="font-bold text-inherit">Vincent AU</p>
+        </Link>
       </NavbarBrand>
-      <NavbarContent className="hidden sm:flex gap-4" justify="center">
-        <NavbarItem>
-          <Link color="foreground" href="/mini-project/json-to-model">
-            Json to Model
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link color="foreground" href="/mini-project/hk-bus-checker">
-            HK Bus Checker
-          </Link>
-        </NavbarItem>
-        {/* <NavbarItem>
-          <Link color="foreground" href="#">
-            Integrations
-          </Link>
-        </NavbarItem> */}
+      <NavbarContent
+        className="hidden sm:flex gap-4"
+        justify="center">
+        {menuItems.map((item, index) => (
+          <NavbarItem key={`${item.title}-${index}`}>
+            <Link
+              color="foreground"
+              href={item.href}
+              className={pathname === item.href ? "active font-bold" : ""}
+            >
+              {item.title}
+            </Link>
+          </NavbarItem>
+        ))}
       </NavbarContent>
       <NavbarContent justify="end">
-        {/* <NavbarItem className="hidden lg:flex">
-          <Link href="#">Login</Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Button as={Link} color="primary" href="#" variant="flat">
-            Sign Up
-          </Button>
-        </NavbarItem> */}
+        <NavbarMenuToggle
+          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          className="sm:hidden"
+        />
       </NavbarContent>
+      <NavbarMenu>
+        {menuItems.map((item, index) => (
+          <NavbarMenuItem key={`${item.title}-${index}`} onClick={handleMenuItemClick}>
+            <Link
+              color="foreground"
+              className={`w-full ${pathname === item.href ? "active font-bold" : ""}`}
+              href={item.href}
+            >
+              {item.title}
+            </Link>
+          </NavbarMenuItem>
+        ))}
+      </NavbarMenu>
+
     </Navbar>
   );
 };
