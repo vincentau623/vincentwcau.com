@@ -15,7 +15,11 @@ const MiniProjectPage = () => {
         title="HK Bus Checker"
         description="Check the real-time Estimated Time of Arrival(ETA) by HK Bus Route."
         href="/mini-project/hk-bus-checker" />
+      <InfoCard
+        title="Queens"
+        description="A solver for the N-Queens problem."
+        href="/mini-project/queens" />
     </div>
   );
 };
-export default MiniProjectPage;
+export default MiniProjectPage;;
