@@ -20,7 +20,7 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <body className={inter.className}>
         <Providers>
-          <main className="min-h-screen bg-gradient-to-tr from-slate-900 to-slate-700">
+          <main className="min-h-screen bg-gradient-to-tr from-slate-900 to-slate-600">
             <NavBar />
             <div className="p-4">
               {children}
