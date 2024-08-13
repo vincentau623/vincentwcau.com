@@ -11,8 +11,8 @@ const NavBar = () => {
   const pathname = usePathname();
 
   const menuItems = [
-    { title: "About Me", href: "/about-me" },
-    { title: "Mini Projects", href: "/mini-project" },
+    { title: "About Me", href: "/#about-me" },
+    { title: "Mini Projects", href: "/#mini-project" },
   ];
 
   const handleMenuItemClick = () => {
@@ -25,7 +25,7 @@ const NavBar = () => {
       onMenuOpenChange={setIsMenuOpen}
       isMenuOpen={isMenuOpen}>
       <NavbarBrand>
-        <Link href="/">
+        <Link href="/#landing">
           <p className="font-bold text-inherit">Vincent AU</p>
         </Link>
       </NavbarBrand>

@@ -22,9 +22,7 @@ export default function RootLayout({
         <Providers>
           <main className="min-h-screen bg-gradient-to-tr from-slate-900 to-slate-600">
             <NavBar />
-            <div className="p-4">
-              {children}
-            </div>
+            {children}
           </main>
         </Providers>
       </body>
