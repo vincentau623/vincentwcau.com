@@ -7,12 +7,17 @@ import { Button, Input } from "@nextui-org/react";
 interface Solution { marker: string; warning: boolean; }
 
 const Queens = () => {
-  const [size, setSize] = useState(8);
-  const [solutions, setSolutions] = useState<Solution[]>(Array.from({ length: size * size }, () => ({ marker: "", warning: false })));
+  const [size, setSize] = useState<number | null>(8);
+  const [solutions, setSolutions] = useState<Solution[]>(Array.from({ length: size ? size * size : 0 }, () => ({ marker: "", warning: false })));
   const [isCompleted, setIsCompleted] = useState(false);
   const [previousInvalidIdx, setPreviousInvalidIdx] = useState<Set<number>>();
 
   const handleSizeChanges = (value: string) => {
+    console.log("value", value, parseInt(value), parseInt(value) || 1);
+    if (!value || value === "0") {
+      setSize(null);
+      return;
+    }
     let newSize = parseInt(value) || 1;
     if (newSize < 1) newSize = 1;
     if (newSize > 16) newSize = 16;
@@ -39,7 +44,7 @@ const Queens = () => {
     }
     const invalidIdxs = validateSolution();
     // add new warning
-    invalidIdxs.forEach(idx => newSolutions[idx].warning = true);
+    invalidIdxs.forEach((idx: number) => newSolutions[idx].warning = true);
     // remove old warning
     if (previousInvalidIdx) {
       previousInvalidIdx.forEach(idx => {
@@ -50,10 +55,14 @@ const Queens = () => {
     }
     // preserve states
     setPreviousInvalidIdx(invalidIdxs);
+
     setSolutions(newSolutions);
   };
 
   const validateSolution = () => {
+    if (!size) {
+      return new Set<number>();
+    }
     console.log("start validate solution");
     let isValid = true;
     const invalidIdxs = new Set<number>();
@@ -82,6 +91,9 @@ const Queens = () => {
   };
 
   const validateQueen = (row: number, col: number): number[] | null[] => {
+    if (!size) {
+      return [];
+    }
     const currentIdx = row * size + col;
     // check row
     for (let i = 0; i < size; i++) {
@@ -124,12 +136,12 @@ const Queens = () => {
   };
 
   const handleClearButton = () => {
-    setSolutions(Array.from({ length: size * size }, () => ({ marker: "", warning: false })));
+    setSolutions(Array.from({ length: size ? size * size : 0 }, () => ({ marker: "", warning: false })));
     setIsCompleted(false);
     setPreviousInvalidIdx(new Set());
   };
 
-  return <>
+  return (<>
     <TitleBar title="Queens" />
     <div className="p-4">
       <h1 className="text-2xl font-bold">Queens</h1>
@@ -140,20 +152,22 @@ const Queens = () => {
     <Input
       label="Size (1-16)"
       placeholder="Enter size of the board"
-      value={`${size}`}
+      value={`${size || ""}`}
       onValueChange={handleSizeChanges}
     />
     <div className="p-4">
-      {Array.from({ length: size }, (_, i) => (
-        <div key={i} className="flex select-none">
-          {Array.from({ length: size }, (_, j) => (
-            <div key={j} className={`flex items-center justify-center w-8 h-8 border border-gray-300 ${solutions[i * size + j]?.warning && "bg-red-900"} ${isCompleted && "bg-green-900"}`}
-              onClick={() => boxPress(i * size + j)}>
-              {renderMarker(solutions[i * size + j]?.marker)}
-            </div>
-          ))}
-        </div>
-      ))}
+      {size &&
+        Array.from({ length: size }, (_, i) => (
+          <div key={i} className="flex select-none">
+            {Array.from({ length: size }, (_, j) => (
+              <div key={j} className={`flex items-center justify-center w-8 h-8 border border-gray-300 ${solutions[i * size + j]?.warning && "bg-red-900"} ${isCompleted && "bg-green-900"}`}
+                onClick={() => boxPress(i * size + j)}>
+                {renderMarker(solutions[i * size + j]?.marker)}
+              </div>
+            ))}
+          </div>
+        ))
+      }
     </div>
     <div className="p-4">
       <Button onPress={handleClearButton}>
@@ -163,7 +177,7 @@ const Queens = () => {
     {isCompleted &&
       <div className="text-3xl p-4">You Completed the Queens Puzzle.</div>
     }
-  </>;
+  </>);
 };
 
 export default Queens;;
