@@ -69,10 +69,9 @@ const JsonToModelPage = () => {
   return (
     <>
       <TitleBar title="JSON to Model Converter" />
-      <div className="container">
         <div className="grid grid-flow-row auto-rows-max gap-4">
-          <div>Input:</div>
-          <div className="w-full flex flex-col gap-2 max-w-[240px]">
+          <div className="">
+            <div>Input:</div>
             <Textarea
               variant="underlined"
               placeholder="Enter your JSON"
@@ -90,7 +89,6 @@ const JsonToModelPage = () => {
             <Code style={{ whiteSpace: 'pre' }}>{output}</Code>
           </div>
         </div>
-      </div>
     </>);
 };
 
