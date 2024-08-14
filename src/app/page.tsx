@@ -30,6 +30,10 @@ export default function LandingPage() {
             title="Queens"
             description="A solver for the N-Queens problem."
             href="/queens" />
+          <InfoCard
+            title="Random Number Generator"
+            description="Generate random numbers."
+            href="/random-number-generator" />
         </div>
         <div id="footer">
           <div className="flex justify-center items-center p-4">

@@ -5,7 +5,7 @@ export default function MiniProjectLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="pt-4">
+    <div className="pt-4 mx-4 text-center justify-items-center">
       {children}
     </div>);
 }
