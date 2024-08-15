@@ -5,6 +5,14 @@ import TitleBar from "@/components/TitleBar";
 
 export default function LandingPage() {
 
+  const infoCardList = [
+    { title: "Json To Model", description: "Convert JSON string to model class TypeScript.", href: "/json-to-model" },
+    { title: "HK Bus Checker", description: "Check the real-time Estimated Time of Arrival(ETA) by HK Bus Route.", href: "/hk-bus-checker" },
+    { title: "Queens", description: "A solver for the N-Queens problem.", href: "/queens" },
+    { title: "Random Number Generator", description: "Generate random numbers.", href: "/random-number-generator" },
+    { title: "Leaflet Map", description: "A map using Leaflet.", href: "/leaflet-map" }
+  ];
+
   return (
     <div className="flex flex-col grow">
       <div id="header" className="-mb-16">
@@ -18,22 +26,9 @@ export default function LandingPage() {
       <div id="mini-project" className="pt-20">
         <div className="flex flex-col items-center">
           <TitleBar title="Mini Project Page" />
-          <InfoCard
-            title="Json To Model"
-            description="Convert JSON string to model class TypeScript."
-            href="/json-to-model" />
-          <InfoCard
-            title="HK Bus Checker"
-            description="Check the real-time Estimated Time of Arrival(ETA) by HK Bus Route."
-            href="/hk-bus-checker" />
-          <InfoCard
-            title="Queens"
-            description="A solver for the N-Queens problem."
-            href="/queens" />
-          <InfoCard
-            title="Random Number Generator"
-            description="Generate random numbers."
-            href="/random-number-generator" />
+          {infoCardList && infoCardList.map((el) =>
+            <InfoCard title={el.title} description={el.description} href={el.href} />)
+          }
         </div>
         <div id="footer">
           <div className="flex justify-center items-center p-4">
