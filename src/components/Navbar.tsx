@@ -13,6 +13,8 @@ const NavBar = () => {
   const menuItems = [
     { title: "About Me", href: "/#about-me" },
     { title: "Mini Projects", href: "/#mini-project" },
+    { title: "Tech Stacks", href: "/#tech" },
+    { title: "Contact Me", href: "/#contact" },
   ];
 
   const handleMenuItemClick = () => {

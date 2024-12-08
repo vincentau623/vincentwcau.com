@@ -15,7 +15,7 @@ const TitleBar = (props: { title: string; }) => {
             <ArrowUturnLeftIcon className="size-6" />
           </Link>}
         </span>
-        <div className="text-center text-lg font-bold">{props.title}</div>
+        <div className="text-center text-2xl font-bold">{props.title}</div>
         <span className="flex-none w-6"></span>
       </div>
       <Divider className="my-4" />
