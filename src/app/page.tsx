@@ -7,10 +7,11 @@ import { Chip, Link } from "@nextui-org/react";
 export default function LandingPage() {
   const infoCardList = [
     {
-      title: "HK Bus Checker",
+      title: "HK Bus ETA Lookup",
       description:
         "To check the real-time Estimated Time of Arrival(ETA) by Hong Kong Bus Route using Hong Kong Bus open data.",
-      href: "/hk-bus-checker",
+      github: "https://github.com/vincentau623/hk-bus-eta",
+      href: "https://hkbuseta.vincentwcau.com/",
     },
     {
       title: "Random Number Generator",
@@ -19,12 +20,12 @@ export default function LandingPage() {
       href: "/random-number-generator",
     },
     {
-      title: "Queens",
+      title: "Queens Solver",
       description: "A solver for the N-Queens problem.",
       href: "/queens",
     },
     {
-      title: "Json To Model",
+      title: "JSON To TS Interface Converter",
       description: "Convert a JSON string to a TypeScript interface.",
       href: "/json-to-model",
     },
@@ -69,6 +70,7 @@ export default function LandingPage() {
                   key={el.title}
                   title={el.title}
                   description={el.description}
+                  github={el.github}
                   href={el.href}
                 />
               ))}

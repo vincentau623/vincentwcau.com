@@ -4,7 +4,6 @@ import TitleBar from "@/components/TitleBar";
 import { Button, Code, Textarea } from "@nextui-org/react";
 import { useState } from "react";
 
-
 const JsonToModelPage = () => {
   const [jsonValue, setJsonValue] = useState("");
 
@@ -47,7 +46,10 @@ const JsonToModelPage = () => {
     } else if (typeof obj === "object" && obj !== null) {
       modelString += `${spaces}{\n`;
       Object.entries(obj).forEach(([key, value]) => {
-        modelString += `${spaces}  ${key}: ${generateModelString(value, indent + 1)},\n`;
+        modelString += `${spaces}  ${key}: ${generateModelString(
+          value,
+          indent + 1
+        )},\n`;
       });
       modelString += `${spaces}}`;
     } else if (typeof obj === "string") {
@@ -65,31 +67,32 @@ const JsonToModelPage = () => {
     return modelString;
   };
 
-
   return (
     <>
-      <TitleBar title="JSON to Model Converter" />
-        <div className="grid grid-flow-row auto-rows-max gap-4">
-          <div className="">
-            <div>Input:</div>
-            <Textarea
-              variant="underlined"
-              placeholder="Enter your JSON"
-              value={jsonValue}
-              onValueChange={setJsonValue}
-            />
-          </div>
-          <div>
-            <Button color="primary" onPress={() => convertJsonToModel()}>
-              Convert
-            </Button>
-          </div>
-          <div>
-            <div>Output:</div>
-            <Code style={{ whiteSpace: 'pre' }}>{output}</Code>
-          </div>
+      <TitleBar title="JSON to TS Interface Converter" />
+      <div className="grid grid-flow-row auto-rows-max gap-4">
+        <div className="">
+          <div>Input:</div>
+          <Textarea
+            variant="faded"
+            className="w-1/3"
+            placeholder="Enter your JSON"
+            value={jsonValue}
+            onValueChange={setJsonValue}
+          />
         </div>
-    </>);
+        <div>
+          <Button color="primary" onPress={() => convertJsonToModel()}>
+            Convert
+          </Button>
+        </div>
+        <div>
+          <div>Output:</div>
+          <Code style={{ whiteSpace: "pre" }}>{output}</Code>
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default JsonToModelPage;

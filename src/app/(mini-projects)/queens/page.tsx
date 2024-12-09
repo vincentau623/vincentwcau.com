@@ -142,14 +142,14 @@ const Queens = () => {
   };
 
   return (<>
-    <TitleBar title="Queens" />
+    <TitleBar title="Queens Solver" />
     <div className="p-4">
-      <h1 className="text-2xl font-bold">Queens</h1>
       <p className="my-4">The N-Queens problem is the problem of placing N chess queens on an N×N chessboard so that no two queens threaten each other; thus, a solution requires that no two queens share the same row, column, or diagonal.</p>
       <p className="my-4">The eight queens puzzle is the problem of placing eight chess queens on an 8×8 chessboard so that no two queens threaten each other; thus, a solution requires that no two queens share the same row, column, or diagonal.</p>
       <p className="my-4">The N-Queens problem is a generalization of the eight queens puzzle.</p>
     </div>
     <Input
+      className="w-1/3"
       label="Size (1-16)"
       placeholder="Enter size of the board"
       value={`${size || ""}`}
