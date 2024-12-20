@@ -5,6 +5,7 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
+  Chip,
   Divider,
 } from "@nextui-org/react";
 import Image from "next/image";
@@ -18,6 +19,7 @@ export const GithubIcon = ({ className }: { className?: string }) => {
 const InfoCard = (props: {
   title: string;
   description: string;
+  skills?: { frontend: string[] };
   github?: string;
   href: string;
 }) => {
@@ -25,7 +27,27 @@ const InfoCard = (props: {
     <Card className="m-4 w-3/4">
       <CardHeader className="flex gap-3">{props.title}</CardHeader>
       <Divider />
-      <CardBody>{props.description}</CardBody>
+      <CardBody>
+
+        <div>{props.description}</div>
+      </CardBody>
+      <Divider />
+      <CardBody>
+        {props.skills && (
+          <div>
+            {props.skills.frontend.map((el) => (
+              <Chip
+                key={el}
+                className="mx-1"
+                color="primary"
+                variant="dot"
+              >
+                {el}
+              </Chip>
+            ))}
+          </div>
+        )}
+      </CardBody >
       <Divider />
       <CardFooter>
         {props.github && (
