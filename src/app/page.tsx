@@ -7,9 +7,17 @@ import { Chip, Link } from "@nextui-org/react";
 export default function LandingPage() {
   const infoCardList = [
     {
+      title: "Split a Bill",
+      description: "A simple bill splitting app.",
+      skills: { frontend: ["React", "Redux", "TypeScript", "Vite", "Material UI"] },
+      github: "https://github.com/vincentau623/split-bills",
+      href: "https://splitbill.vincentwcau.com",
+    },
+    {
       title: "HK Bus ETA Lookup",
       description:
         "To check the real-time Estimated Time of Arrival(ETA) by Hong Kong Bus Route using Hong Kong Bus open data.",
+      skills: { "frontend": ["React", "TypeScript", "Vite", "Material UI", "Moment.js"] },
       github: "https://github.com/vincentau623/hk-bus-eta",
       href: "https://hkbuseta.vincentwcau.com/",
     },
@@ -17,16 +25,19 @@ export default function LandingPage() {
       title: "Random Number Generator",
       description:
         "Generate a set of random numbers with customizable min, max and size.",
+      skills: { "frontend": ["React", "Next.Js", "TypeScript", "Next UI", "TailwindCSS"] },
       href: "/random-number-generator",
     },
     {
       title: "Queens Solver",
       description: "A solver for the N-Queens problem.",
+      skills: { "frontend": ["React", "Next.Js", "TypeScript", "Next UI", "TailwindCSS"] },
       href: "/queens",
     },
     {
       title: "JSON To TS Interface Converter",
       description: "Convert a JSON string to a TypeScript interface.",
+      skills: { "frontend": ["React", "Next.Js", "TypeScript", "Next UI", "TailwindCSS"] },
       href: "/json-to-model",
     },
     // {
@@ -70,6 +81,7 @@ export default function LandingPage() {
                   key={el.title}
                   title={el.title}
                   description={el.description}
+                  skills={el.skills}
                   github={el.github}
                   href={el.href}
                 />
@@ -117,7 +129,7 @@ export default function LandingPage() {
                 (el) => (
                   <Chip
                     className="mx-1"
-                    color="primary"
+                    color="secondary"
                     variant="dot"
                     radius="sm"
                     key={el}
@@ -144,7 +156,7 @@ export default function LandingPage() {
               ].map((el) => (
                 <Chip
                   className="mx-1"
-                  color="primary"
+                  color="warning"
                   variant="dot"
                   radius="sm"
                   key={el}
@@ -165,7 +177,7 @@ export default function LandingPage() {
               ].map((el) => (
                 <Chip
                   className="mx-1"
-                  color="primary"
+                  color="danger"
                   variant="dot"
                   radius="sm"
                   key={el}
@@ -175,7 +187,7 @@ export default function LandingPage() {
               ))}
             </div>
             <div>
-              DevOps::{" "}
+              DevOps:{" "}
               {[
                 "Git",
                 "Azure",
@@ -190,7 +202,7 @@ export default function LandingPage() {
               ].map((el) => (
                 <Chip
                   className="mx-1"
-                  color="primary"
+                  color="success"
                   variant="dot"
                   radius="sm"
                   key={el}
@@ -204,7 +216,7 @@ export default function LandingPage() {
               {["PRINCE2", "Agile", "Technical Writing"].map((el) => (
                 <Chip
                   className="mx-1"
-                  color="primary"
+                  color="default"
                   variant="dot"
                   radius="sm"
                   key={el}
@@ -219,7 +231,7 @@ export default function LandingPage() {
                 (el) => (
                   <Chip
                     className="mx-1"
-                    color="primary"
+                    color="default"
                     variant="dot"
                     radius="sm"
                     key={el}
