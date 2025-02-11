@@ -1,7 +1,7 @@
 import { Card, CardContent, Typography, Chip, Stack } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import hostImg from "../assets/HOST.png";
-import easyTransitImg from "../assets/easytransit.png";
+import easyTransitImg from "../assets/EasyTransit.png";
 
 const projects = [
     {
