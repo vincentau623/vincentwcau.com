@@ -106,7 +106,7 @@ function App() {
                     <Typography variant="body1">
                         Reach me via email at{" "}
                         <Link href="mailto:vincentwcau@gmail.com">
-                            vincent@example.com
+                            vincentwcau@gmail.com
                         </Link>{" "}
                         or connect with me on{" "}
                         <Link
