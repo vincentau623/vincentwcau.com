@@ -10,7 +10,7 @@ const projects = [
         description: `"Housing Smart Intake (HOST) System" provides a web-based electronic submission system for tenants/owner to report of defects within the flat during the first intake of flats in new housing estates/courts.`,
         techSkills: [
             "React",
-            "Angualr",
+            "Angular",
             "Java",
             "Spring Framework",
             "Oracle PL/SQL",
