@@ -17,11 +17,11 @@ import vincentLogo from "../assets/web-icon.png";
 import React from "react";
 
 const navItems = [
-    { label: "Home", href: "#home" },
-    { label: "Tech Stacks", href: "#techstacks" },
-    { label: "Selected Projects", href: "#projects" },
-    { label: "Mini Projects", href: "#miniprojects" },
-    { label: "Contact", href: "#contact" },
+    { label: "Home", href: "/#home" },
+    { label: "Tech Stacks", href: "/#techstacks" },
+    { label: "Selected Projects", href: "/#projects" },
+    { label: "Mini Projects", href: "/#miniprojects" },
+    { label: "Contact", href: "/#contact" },
 ];
 
 interface Props {
@@ -106,6 +106,7 @@ const Header = (props: Props) => {
                     </Drawer>
                     {navItems.map((item) => (
                         <Link
+                            key={item.label}
                             href={item.href}
                             underline="none"
                             color="inherit"

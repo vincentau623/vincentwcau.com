@@ -13,7 +13,7 @@ const projects = [
     {
         title: "Split a Bill",
         description: "A simple bill splitting app.",
-        techSkills: ["React", "Redux", "TypeScript", "Vite", "Material-UI"],
+        techSkills: ["React", "Redux", "TypeScript", "Vite", "Material UI"],
         githubLink: "https://github.com/vincentau623/split-bills",
         gotoLink: "https://splitbill.vincentwcau.com",
     },
@@ -27,10 +27,17 @@ const projects = [
             "Moment.js",
             "TypeScript",
             "Vite",
-            "Material-UI",
+            "Material UI",
         ],
         githubLink: "https://github.com/vincentau623/hk-bus-eta",
         gotoLink: "https://hkbuseta.vincentwcau.com",
+    },
+    {
+        title: "Lucky Number Generator",
+        description:
+            "Feeling lucky? How about generating a few sets of random numbers?",
+        techSkills: ["React", "TypeScript", "Vite", "Material UI"],
+        gotoLink: "/lucky-number",
     },
 ];
 
@@ -76,21 +83,27 @@ const MiniProjects = () => {
                             </div>
                         </CardContent>
                         <CardActions>
-                            <Button
-                                size="small"
-                                href={project.githubLink}
-                                target="_blank"
-                                startIcon={<i className="fab fa-github"></i>}
-                            >
-                                GitHub
-                            </Button>
-                            <Button
-                                size="small"
-                                href={project.gotoLink}
-                                target="_blank"
-                            >
-                                Go to Project
-                            </Button>
+                            {project.githubLink && (
+                                <Button
+                                    size="small"
+                                    href={project.githubLink}
+                                    target="_blank"
+                                    startIcon={
+                                        <i className="fab fa-github"></i>
+                                    }
+                                >
+                                    GitHub
+                                </Button>
+                            )}
+                            {project.gotoLink && (
+                                <Button
+                                    size="small"
+                                    href={project.gotoLink}
+                                    target="_blank"
+                                >
+                                    Go to Project
+                                </Button>
+                            )}
                         </CardActions>
                     </Card>
                 </Grid>
