@@ -16,13 +16,13 @@
     "@mui/icons-material": "^6.4.3",
     "@mui/material": "^6.4.3",
     "posthog-js": "^1.261.0",
-    "react": "^19.0.0",
+    "react": "^19.1.1",
     "react-dom": "^19.0.0",
     "react-router": "^7.4.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
-    "@types/react": "^19.0.8",
+    "@types/react": "^19.1.12",
     "@types/react-dom": "^19.0.3",
     "@vitejs/plugin-react-swc": "^3.5.0",
     "eslint": "^9.19.0",
