@@ -1,21 +1,17 @@
 import { Container, Typography } from "@mui/material";
 import "./App.css";
 import Header from "./components/Header";
-import { Route, BrowserRouter, Routes } from "react-router";
+import { Route, BrowserRouter, Outlet, Routes } from "react-router";
 import LuckyNumber from "./pages/LuckyNumber";
 import Landing from "./pages/Landing";
+import MlbStat from "./pages/MlbStat";
 
-function App() {
+function SiteLayout() {
     return (
         <div className="app">
             <Header />
             <Container component="main" className="main-content">
-                <BrowserRouter>
-                    <Routes>
-                        <Route path="/" element={<Landing />} />
-                        <Route path="/lucky-number" element={<LuckyNumber />} />
-                    </Routes>
-                </BrowserRouter>
+                <Outlet />
             </Container>
             <footer className="footer">
                 <Typography variant="body2">
@@ -23,6 +19,20 @@ function App() {
                 </Typography>
             </footer>
         </div>
+    );
+}
+
+function App() {
+    return (
+        <BrowserRouter>
+            <Routes>
+                <Route element={<SiteLayout />}>
+                    <Route path="/" element={<Landing />} />
+                    <Route path="/lucky-number" element={<LuckyNumber />} />
+                    <Route path="/mlb-stat" element={<MlbStat />} />
+                </Route>
+            </Routes>
+        </BrowserRouter>
     );
 }
 
