@@ -39,6 +39,13 @@ const projects = [
         techSkills: ["React", "TypeScript", "Vite", "Material UI"],
         gotoLink: "/lucky-number",
     },
+    {
+        title: "MLB Margin Dashboard",
+        description:
+            "Analyze MLB run-margin trends from today's schedule, standings, and each team's last 30 games.",
+        techSkills: ["React", "TypeScript", "MLB Stats API"],
+        gotoLink: "/mlb-stat",
+    },
 ];
 
 const MiniProjects = () => {
