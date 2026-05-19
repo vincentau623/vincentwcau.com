@@ -15,7 +15,7 @@ function SiteLayout() {
             </Container>
             <footer className="footer">
                 <Typography variant="body2">
-                    &copy; 2025 Vincent Au. All rights reserved.
+                    &copy; 2026 Vincent Au. All rights reserved.
                 </Typography>
             </footer>
         </div>
