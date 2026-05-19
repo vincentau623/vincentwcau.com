@@ -16,7 +16,7 @@
     "@mui/icons-material": "^6.5.0",
     "@mui/material": "^6.5.0",
     "i18next": "^26.2.0",
-    "posthog-js": "^1.373.5",
+    "posthog-js": "^1.374.2",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-i18next": "^17.0.8",
@@ -26,14 +26,14 @@
     "@eslint/js": "^9.39.4",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react-swc": "^3.11.0",
+    "@vitejs/plugin-react-swc": "^4.3.1",
     "eslint": "^9.39.4",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.26",
     "globals": "^15.15.0",
-    "typescript": "~5.7.3",
-    "typescript-eslint": "^8.59.3",
-    "vite": "^6.4.2"
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.59.4",
+    "vite": "^7.1.12"
   },
   "pnpm": {
     "overrides": {
