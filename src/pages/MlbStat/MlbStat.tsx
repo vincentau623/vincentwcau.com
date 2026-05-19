@@ -1,61 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { StandingRecord, RecentGame, MarginBucket, TeamAnalysis, ScheduleGame, DisplayMode, Theme } from "./types";
 import "./MlbStat.css";
 
-type Theme = "light" | "dark";
-
-type ScheduleGame = {
-    gamePk: number;
-    gameDate: string;
-    status: string;
-    away: string;
-    home: string;
-    awayScore?: number;
-    homeScore?: number;
-};
-
-type StandingRecord = {
-    teamId: number;
-    teamName: string;
-    division: string;
-    wins: number;
-    losses: number;
-    pct: string;
-};
-
-type RecentGame = {
-    teamScore: number;
-    oppScore: number;
-    margin: number;
-    won: boolean;
-};
-
-type MarginBucket = {
-    one: number;
-    two: number;
-    over2: number;
-    total: number;
-    ratio: number;
-};
-
-type TeamAnalysis = {
-    teamId: number;
-    teamName: string;
-    division: string;
-    winsSeason: number;
-    lossesSeason: number;
-    pct: string;
-    winOne: number;
-    winTwo: number;
-    winOver2: number;
-    winRatio: number;
-    lossOne: number;
-    lossTwo: number;
-    lossOver2: number;
-    lossRatio: number;
-    recentCount: number;
-};
-
-type DisplayMode = "all" | "wins" | "losses";
+function localeForLanguage(lng: string): string {
+    return lng === "zh-Hant" ? "zh-TW" : "en-US";
+}
 
 function dateStr(d = new Date()) {
     const y = d.getFullYear();
@@ -118,8 +68,8 @@ async function getStandings(): Promise<StandingRecord[]> {
         }[];
     }>(
         "https://statsapi.mlb.com/api/v1/standings?leagueId=103,104&season=" +
-            new Date().getFullYear() +
-            "&standingsTypes=regularSeason"
+        new Date().getFullYear() +
+        "&standingsTypes=regularSeason"
     );
     const records: StandingRecord[] = [];
     for (const rec of data.records || []) {
@@ -179,6 +129,10 @@ async function getRecentGames(teamId: number): Promise<RecentGame[]> {
     return games.slice(-30);
 }
 
+function marginRatio(team: TeamAnalysis, mode: DisplayMode): number {
+    return mode === "losses" ? team.lossRatio : team.winRatio;
+}
+
 function bucketMargins(games: RecentGame[], won: boolean): MarginBucket {
     const subset = games.filter((g) => g.won === won);
     const out: MarginBucket = {
@@ -198,23 +152,27 @@ function bucketMargins(games: RecentGame[], won: boolean): MarginBucket {
 }
 
 function MarginPill({ ratio, threshold }: { ratio: number; threshold: number }) {
+    const { t } = useTranslation("mlbStat");
     if (ratio >= threshold) {
-        return <span className="mlb-stat-pill good">偏高</span>;
+        return <span className="mlb-stat-pill good">{t("pill.high")}</span>;
     }
     if (ratio <= 0.45) {
-        return <span className="mlb-stat-pill bad">偏低</span>;
+        return <span className="mlb-stat-pill bad">{t("pill.low")}</span>;
     }
-    return <span className="mlb-stat-pill neutral">一般</span>;
+    return <span className="mlb-stat-pill neutral">{t("pill.neutral")}</span>;
 }
 
 const MlbStat = () => {
+    const { t, i18n } = useTranslation("mlbStat");
+    const dateLocale = localeForLanguage(i18n.language);
+
     const [theme, setTheme] = useState<Theme>(() =>
         matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
     );
     const [teams, setTeams] = useState<TeamAnalysis[]>([]);
     const [schedule, setSchedule] = useState<ScheduleGame[]>([]);
     const [divisions, setDivisions] = useState<string[]>([]);
-    const [statusText, setStatusText] = useState("等待載入資料…");
+    const [statusText, setStatusText] = useState("");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -235,10 +193,14 @@ const MlbStat = () => {
         document.documentElement.dataset.mlbTheme = theme;
     }, [theme]);
 
+    useEffect(() => {
+        setStatusText(t("status.waiting"));
+    }, [t]);
+
     const loadAll = useCallback(async () => {
         setLoading(true);
         setError(null);
-        setStatusText("讀取球隊、戰績與近期賽程中…");
+        setStatusText(t("status.loading"));
         try {
             const [teamList, scheduleData, standings] = await Promise.all([
                 getTeams(),
@@ -280,49 +242,82 @@ const MlbStat = () => {
                 });
             }
             setTeams(analysis.sort((a, b) => b.winRatio - a.winRatio));
-            setStatusText(`更新完成：${new Date().toLocaleString("zh-TW")}`);
+            setStatusText(
+                t("status.updated", {
+                    time: new Date().toLocaleString(dateLocale),
+                })
+            );
         } catch (err) {
             console.error(err);
             const message =
                 err instanceof Error ? err.message : "Unknown error";
             setError(message);
-            setStatusText("載入失敗");
+            setStatusText(t("status.failed"));
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [t, dateLocale]);
 
     useEffect(() => {
         loadAll();
     }, [loadAll]);
 
-    const threshold = Number(thresholdFilter || 0.66);
+    const showAllTeams = thresholdFilter === "all";
+    const pillThreshold = showAllTeams
+        ? 0.66
+        : Number(thresholdFilter || 0.66);
 
     const filteredTeams = useMemo(() => {
         const keyword = teamFilter.trim().toLowerCase();
         return teams
-            .filter(
-                (t) =>
-                    (!keyword ||
-                        t.teamName.toLowerCase().includes(keyword)) &&
-                    (!divisionFilter || t.division === divisionFilter)
-            )
-            .sort((a, b) => {
-                const av = modeFilter === "losses" ? a.lossRatio : a.winRatio;
-                const bv = modeFilter === "losses" ? b.lossRatio : b.winRatio;
-                return bv - av;
-            });
-    }, [teams, teamFilter, divisionFilter, modeFilter]);
+            .filter((team) => {
+                if (
+                    keyword &&
+                    !team.teamName.toLowerCase().includes(keyword)
+                ) {
+                    return false;
+                }
+                if (divisionFilter && team.division !== divisionFilter) {
+                    return false;
+                }
+                if (
+                    !showAllTeams &&
+                    marginRatio(team, modeFilter) < pillThreshold
+                ) {
+                    return false;
+                }
+                return true;
+            })
+            .sort(
+                (a, b) =>
+                    marginRatio(b, modeFilter) - marginRatio(a, modeFilter)
+            );
+    }, [
+        teams,
+        teamFilter,
+        divisionFilter,
+        modeFilter,
+        showAllTeams,
+        pillThreshold,
+    ]);
 
     const highMarginCount = useMemo(
         () =>
-            filteredTeams.filter((t) => {
-                const ratio =
-                    modeFilter === "losses" ? t.lossRatio : t.winRatio;
-                return ratio >= threshold;
-            }).length,
-        [filteredTeams, modeFilter, threshold]
+            filteredTeams.filter(
+                (team) => marginRatio(team, modeFilter) >= pillThreshold
+            ).length,
+        [filteredTeams, modeFilter, pillThreshold]
     );
+
+    const filteredSchedule = useMemo(() => {
+        const keyword = teamFilter.trim().toLowerCase();
+        if (!keyword) return schedule;
+        return schedule.filter(
+            (game) =>
+                game.away.toLowerCase().includes(keyword) ||
+                game.home.toLowerCase().includes(keyword)
+        );
+    }, [schedule, teamFilter]);
 
     const toggleTheme = () => {
         setTheme((prev) => (prev === "dark" ? "light" : "dark"));
@@ -332,10 +327,10 @@ const MlbStat = () => {
         <div
             className="mlb-stat-root"
             data-theme={theme}
-            lang="zh-Hant"
+            lang={i18n.language}
         >
             <a className="mlb-stat-skip" href="#mlb-stat-main">
-                Skip to content
+                {t("a11y.skipToContent")}
             </a>
             <div className="mlb-stat-wrap">
                 <header className="mlb-stat-header">
@@ -346,7 +341,7 @@ const MlbStat = () => {
                             fill="none"
                             stroke="currentColor"
                             strokeWidth="4"
-                            aria-label="MLB Margin logo"
+                            aria-label={t("a11y.logo")}
                         >
                             <rect
                                 x="6"
@@ -365,21 +360,30 @@ const MlbStat = () => {
                             />
                         </svg>
                         <div>
-                            <h1>MLB 勝分差面板</h1>
-                            <div className="mlb-stat-muted">
-                                用 JavaScript 直接抓 MLB Stats API，顯示賽程、戰績與大比分傾向。
-                            </div>
+                            <h1>{t("title")}</h1>
+                            <div className="mlb-stat-muted">{t("subtitle")}</div>
                         </div>
                     </div>
                     <div className="mlb-stat-top-actions">
                         <a className="mlb-stat-btn" href="/">
-                            ← 首頁
+                            {t("nav.home")}
                         </a>
+                        <select
+                            className="mlb-stat-btn mlb-stat-lang"
+                            value={i18n.language}
+                            onChange={(e) =>
+                                void i18n.changeLanguage(e.target.value)
+                            }
+                            aria-label={t("lang.switch")}
+                        >
+                            <option value="zh-Hant">{t("lang.zhHant")}</option>
+                            <option value="en">{t("lang.en")}</option>
+                        </select>
                         <button
                             type="button"
                             className="mlb-stat-btn"
                             onClick={toggleTheme}
-                            aria-label="切換深色模式"
+                            aria-label={t("a11y.toggleTheme")}
                         >
                             {theme === "dark" ? "☀️" : "🌙"}
                         </button>
@@ -389,7 +393,7 @@ const MlbStat = () => {
                             onClick={loadAll}
                             disabled={loading}
                         >
-                            重新整理
+                            {t("actions.refresh")}
                         </button>
                     </div>
                 </header>
@@ -397,36 +401,35 @@ const MlbStat = () => {
                 <main id="mlb-stat-main">
                     <section className="mlb-stat-hero">
                         <article className="mlb-stat-panel mlb-stat-hero-card">
-                            <div className="mlb-stat-muted">資料用途</div>
-                            <p>
-                                這個頁面示範如何在前端直接讀取 MLB 官方公開 Stats
-                                API，先拉今日賽程與聯盟戰績，再用最近比賽的比分差做出「1分、2分、超過2分」分類。你可以把它延伸成你之前提到的勝分差觀察工具。
-                            </p>
+                            <div className="mlb-stat-muted">{t("hero.purposeLabel")}</div>
+                            <p>{t("hero.purposeText")}</p>
                         </article>
                         <aside className="mlb-stat-panel mlb-stat-hero-card">
-                            <div className="mlb-stat-muted">目前狀態</div>
+                            <div className="mlb-stat-muted">{t("hero.statusLabel")}</div>
                             <div>{statusText}</div>
                             <div
                                 className="mlb-stat-muted"
                                 style={{ marginTop: "1rem" }}
                             >
-                                預設抓取：MLB 全聯盟、今天賽程、每隊最近 30
-                                場已完賽。
+                                {t("hero.statusNote")}
                             </div>
                         </aside>
                     </section>
 
-                    <section className="mlb-stat-grid" aria-label="summary cards">
+                    <section
+                        className="mlb-stat-grid"
+                        aria-label={t("a11y.summaryCards")}
+                    >
                         <div className="mlb-stat-panel mlb-stat-stat">
-                            <div className="label">今日比賽數</div>
-                            <div className="value">{schedule.length}</div>
+                            <div className="label">{t("stats.gamesToday")}</div>
+                            <div className="value">{filteredSchedule.length}</div>
                         </div>
                         <div className="mlb-stat-panel mlb-stat-stat">
-                            <div className="label">分析球隊數</div>
+                            <div className="label">{t("stats.teamsAnalyzed")}</div>
                             <div className="value">{teams.length}</div>
                         </div>
                         <div className="mlb-stat-panel mlb-stat-stat">
-                            <div className="label">大比分偏高隊數</div>
+                            <div className="label">{t("stats.highMarginTeams")}</div>
                             <div className="value">{highMarginCount}</div>
                         </div>
                     </section>
@@ -437,19 +440,17 @@ const MlbStat = () => {
                     >
                         <div className="mlb-stat-section-head">
                             <div>
-                                <h2 id="controls-title">篩選設定</h2>
-                                <div className="mlb-stat-note">
-                                    可用聯盟分區、球隊名稱搜尋，或調整「超過2分占比」門檻。
-                                </div>
+                                <h2 id="controls-title">{t("filters.title")}</h2>
+                                <div className="mlb-stat-note">{t("filters.note")}</div>
                             </div>
                         </div>
                         <div className="mlb-stat-controls">
                             <div>
-                                <label htmlFor="teamFilter">球隊搜尋</label>
+                                <label htmlFor="teamFilter">{t("filters.teamSearch")}</label>
                                 <input
                                     id="teamFilter"
                                     type="text"
-                                    placeholder="例如 Giants"
+                                    placeholder={t("filters.teamPlaceholder")}
                                     value={teamFilter}
                                     onChange={(e) =>
                                         setTeamFilter(e.target.value)
@@ -457,7 +458,7 @@ const MlbStat = () => {
                                 />
                             </div>
                             <div>
-                                <label htmlFor="divisionFilter">分區</label>
+                                <label htmlFor="divisionFilter">{t("filters.division")}</label>
                                 <select
                                     id="divisionFilter"
                                     value={divisionFilter}
@@ -465,7 +466,7 @@ const MlbStat = () => {
                                         setDivisionFilter(e.target.value)
                                     }
                                 >
-                                    <option value="">全部</option>
+                                    <option value="">{t("filters.all")}</option>
                                     {divisions.map((d) => (
                                         <option key={d} value={d}>
                                             {d}
@@ -475,7 +476,7 @@ const MlbStat = () => {
                             </div>
                             <div>
                                 <label htmlFor="thresholdFilter">
-                                    大比分門檻
+                                    {t("filters.threshold")}
                                 </label>
                                 <select
                                     id="thresholdFilter"
@@ -484,13 +485,16 @@ const MlbStat = () => {
                                         setThresholdFilter(e.target.value)
                                     }
                                 >
+                                    <option value="all">
+                                        {t("filters.thresholdAll")}
+                                    </option>
                                     <option value="0.55">55%</option>
                                     <option value="0.66">66%</option>
                                     <option value="0.7">70%</option>
                                 </select>
                             </div>
                             <div>
-                                <label htmlFor="modeFilter">顯示模式</label>
+                                <label htmlFor="modeFilter">{t("filters.displayMode")}</label>
                                 <select
                                     id="modeFilter"
                                     value={modeFilter}
@@ -500,9 +504,9 @@ const MlbStat = () => {
                                         )
                                     }
                                 >
-                                    <option value="all">全部</option>
-                                    <option value="wins">只看贏球分布</option>
-                                    <option value="losses">只看輸球分布</option>
+                                    <option value="all">{t("filters.all")}</option>
+                                    <option value="wins">{t("filters.winsOnly")}</option>
+                                    <option value="losses">{t("filters.lossesOnly")}</option>
                                 </select>
                             </div>
                         </div>
@@ -513,80 +517,76 @@ const MlbStat = () => {
                     >
                         <div className="mlb-stat-section-head">
                             <div>
-                                <h2>球隊勝分差分析</h2>
-                                <div className="mlb-stat-note">
-                                    最近 30 場已完賽，將比分差分成 1 分、2 分、超過
-                                    2 分，並標示是否高於你設定的門檻。
-                                </div>
+                                <h2>{t("analysis.title")}</h2>
+                                <div className="mlb-stat-note">{t("analysis.note")}</div>
                             </div>
                         </div>
                         <div className="mlb-stat-table-wrap">
                             {loading ? (
                                 <div className="mlb-stat-loading">
-                                    載入中…
+                                    {t("loading")}
                                 </div>
                             ) : error ? (
                                 <div className="mlb-stat-error">
-                                    資料讀取失敗：{error}
+                                    {t("error.loadFailed", { error })}
                                 </div>
                             ) : filteredTeams.length === 0 ? (
-                                <div className="mlb-stat-loading">
-                                    沒有符合條件的球隊。
-                                </div>
+                                <div className="mlb-stat-loading">{t("noTeams")}</div>
                             ) : (
                                 <table>
                                     <thead>
                                         <tr>
-                                            <th>球隊</th>
-                                            <th>分區</th>
-                                            <th>戰績</th>
-                                            <th>贏球 1-2-3+</th>
-                                            <th>贏球 3+ 比例</th>
-                                            <th>輸球 1-2-3+</th>
-                                            <th>輸球 3+ 比例</th>
-                                            <th>判定</th>
+                                            <th>{t("table.team")}</th>
+                                            <th>{t("table.division")}</th>
+                                            <th>{t("table.record")}</th>
+                                            <th>{t("table.winMargin")}</th>
+                                            <th>{t("table.winOver2Pct")}</th>
+                                            <th>{t("table.lossMargin")}</th>
+                                            <th>{t("table.lossOver2Pct")}</th>
+                                            <th>{t("table.verdict")}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {filteredTeams.map((t) => {
-                                            const targetRatio =
-                                                modeFilter === "losses"
-                                                    ? t.lossRatio
-                                                    : t.winRatio;
+                                        {filteredTeams.map((team) => {
+                                            const targetRatio = marginRatio(
+                                                team,
+                                                modeFilter
+                                            );
                                             return (
-                                                <tr key={t.teamId}>
+                                                <tr key={team.teamId}>
                                                     <td>
                                                         <strong>
-                                                            {t.teamName}
+                                                            {team.teamName}
                                                         </strong>
                                                         <div className="mlb-stat-muted">
-                                                            近 {t.recentCount}{" "}
-                                                            場
+                                                            {t("recentGames", {
+                                                                count: team.recentCount,
+                                                            })}
                                                         </div>
                                                     </td>
-                                                    <td>{t.division}</td>
+                                                    <td>{team.division}</td>
                                                     <td>
-                                                        {t.winsSeason}-
-                                                        {t.lossesSeason} (
-                                                        {t.pct})
+                                                        {team.winsSeason}-
+                                                        {team.lossesSeason} (
+                                                        {team.pct})
                                                     </td>
                                                     <td>
-                                                        {t.winOne}-{t.winTwo}-
-                                                        {t.winOver2}
+                                                        {team.winOne}-{team.winTwo}-
+                                                        {team.winOver2}
                                                     </td>
                                                     <td>
-                                                        {(t.winRatio * 100).toFixed(
+                                                        {(team.winRatio * 100).toFixed(
                                                             1
                                                         )}
                                                         %
                                                     </td>
                                                     <td>
-                                                        {t.lossOne}-{t.lossTwo}-
-                                                        {t.lossOver2}
+                                                        {team.lossOne}-{team.lossTwo}-
+                                                        {team.lossOver2}
                                                     </td>
                                                     <td>
                                                         {(
-                                                            t.lossRatio * 100
+                                                            team.lossRatio * 100
                                                         ).toFixed(1)}
                                                         %
                                                     </td>
@@ -594,7 +594,7 @@ const MlbStat = () => {
                                                         <MarginPill
                                                             ratio={targetRatio}
                                                             threshold={
-                                                                threshold
+                                                                pillThreshold
                                                             }
                                                         />
                                                     </td>
@@ -612,38 +612,35 @@ const MlbStat = () => {
                     >
                         <div className="mlb-stat-section-head">
                             <div>
-                                <h2>今日賽程</h2>
-                                <div className="mlb-stat-note">
-                                    顯示今日 MLB 賽程與開賽時間，資料來自官方
-                                    schedule endpoint。
-                                </div>
+                                <h2>{t("schedule.title")}</h2>
+                                <div className="mlb-stat-note">{t("schedule.note")}</div>
                             </div>
                         </div>
                         <div className="mlb-stat-table-wrap">
                             {loading ? (
                                 <div className="mlb-stat-loading">
-                                    載入中…
+                                    {t("loading")}
                                 </div>
                             ) : error ? (
                                 <div className="mlb-stat-error">
-                                    資料讀取失敗：{error}
+                                    {t("error.loadFailed", { error })}
                                 </div>
-                            ) : schedule.length === 0 ? (
+                            ) : filteredSchedule.length === 0 ? (
                                 <div className="mlb-stat-loading">
-                                    今日沒有賽程資料。
+                                    {t("schedule.empty")}
                                 </div>
                             ) : (
                                 <table>
                                     <thead>
                                         <tr>
-                                            <th>對戰</th>
-                                            <th>時間</th>
-                                            <th>狀態</th>
-                                            <th>比分</th>
+                                            <th>{t("schedule.matchup")}</th>
+                                            <th>{t("schedule.time")}</th>
+                                            <th>{t("schedule.status")}</th>
+                                            <th>{t("schedule.score")}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {schedule.map((g) => (
+                                        {filteredSchedule.map((g) => (
                                             <tr key={g.gamePk}>
                                                 <td>
                                                     {g.away} @ {g.home}
@@ -651,7 +648,7 @@ const MlbStat = () => {
                                                 <td>
                                                     {new Date(
                                                         g.gameDate
-                                                    ).toLocaleString("zh-TW", {
+                                                    ).toLocaleString(dateLocale, {
                                                         hour: "2-digit",
                                                         minute: "2-digit",
                                                         month: "2-digit",
@@ -672,9 +669,7 @@ const MlbStat = () => {
                     </section>
                 </main>
 
-                <footer className="mlb-stat-footer">
-                    資料來源：MLB Stats API。前端直接呼叫官方公開 API。
-                </footer>
+                <footer className="mlb-stat-footer">{t("footer")}</footer>
             </div>
         </div>
     );

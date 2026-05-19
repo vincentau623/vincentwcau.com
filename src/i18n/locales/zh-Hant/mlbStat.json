@@ -1,0 +1,86 @@
+{
+  "pill": {
+    "high": "偏高",
+    "low": "偏低",
+    "neutral": "一般"
+  },
+  "status": {
+    "waiting": "等待載入資料…",
+    "loading": "讀取球隊、戰績與近期賽程中…",
+    "updated": "更新完成：{{time}}",
+    "failed": "載入失敗"
+  },
+  "a11y": {
+    "skipToContent": "跳至主要內容",
+    "toggleTheme": "切換深色模式",
+    "summaryCards": "摘要卡片",
+    "logo": "MLB 勝分差標誌"
+  },
+  "title": "MLB 勝分差面板",
+  "subtitle": "用 JavaScript 直接抓 MLB Stats API，顯示賽程、戰績與大比分傾向。",
+  "nav": {
+    "home": "← 首頁"
+  },
+  "actions": {
+    "refresh": "重新整理"
+  },
+  "lang": {
+    "switch": "語言",
+    "en": "English",
+    "zhHant": "繁體中文"
+  },
+  "hero": {
+    "purposeLabel": "資料用途",
+    "purposeText": "這個頁面示範如何在前端直接讀取 MLB 官方公開 Stats API，先拉今日賽程與聯盟戰績，再用最近比賽的比分差做出「1分、2分、超過2分」分類。你可以把它延伸成你之前提到的勝分差觀察工具。",
+    "statusLabel": "目前狀態",
+    "statusNote": "預設抓取：MLB 全聯盟、今天賽程、每隊最近 30 場已完賽。"
+  },
+  "stats": {
+    "gamesToday": "今日比賽數",
+    "teamsAnalyzed": "分析球隊數",
+    "highMarginTeams": "大比分偏高隊數"
+  },
+  "filters": {
+    "title": "篩選設定",
+    "note": "可用聯盟分區、球隊名稱搜尋，或調整「超過2分占比」門檻。",
+    "teamSearch": "球隊搜尋",
+    "teamPlaceholder": "例如 Giants",
+    "division": "分區",
+    "all": "全部",
+    "threshold": "大比分門檻",
+    "thresholdAll": "顯示全部球隊",
+    "displayMode": "顯示模式",
+    "winsOnly": "只看贏球分布",
+    "lossesOnly": "只看輸球分布"
+  },
+  "analysis": {
+    "title": "球隊勝分差分析",
+    "note": "最近 30 場已完賽，將比分差分成 1 分、2 分、超過 2 分，並標示是否高於你設定的門檻。"
+  },
+  "loading": "載入中…",
+  "error": {
+    "loadFailed": "資料讀取失敗：{{error}}"
+  },
+  "noTeams": "沒有符合條件的球隊。",
+  "table": {
+    "team": "球隊",
+    "division": "分區",
+    "record": "戰績",
+    "winMargin": "贏球 1-2-3+",
+    "winOver2Pct": "贏球 3+ 比例",
+    "lossMargin": "輸球 1-2-3+",
+    "lossOver2Pct": "輸球 3+ 比例",
+    "verdict": "判定"
+  },
+  "recentGames": "近 {{count}} 場",
+  "schedule": {
+    "title": "今日賽程",
+    "note": "顯示今日 MLB 賽程與開賽時間，資料來自官方 schedule endpoint。",
+    "empty": "今日沒有賽程資料。",
+    "matchup": "對戰",
+    "time": "時間",
+    "status": "狀態",
+    "score": "比分"
+  },
+  "footer": "資料來源：MLB Stats API。前端直接呼叫官方公開 API。"
+}

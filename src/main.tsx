@@ -7,6 +7,7 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import CssBaseline from "@mui/material/CssBaseline";
 
+import "./i18n";
 import theme from "./theme";
 import App from "./App.tsx";
 import { PostHogProvider } from "posthog-js/react";
