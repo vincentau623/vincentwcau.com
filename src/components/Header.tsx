@@ -21,6 +21,7 @@ const navItems = [
     { label: "Tech Stacks", href: "/#techstacks" },
     { label: "Selected Projects", href: "/#projects" },
     { label: "Mini Projects", href: "/#miniprojects" },
+    { label: "Blue Jays", href: "/#bluejays" },
     { label: "Contact", href: "/#contact" },
 ];
 
