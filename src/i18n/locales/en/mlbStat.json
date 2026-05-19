@@ -1,0 +1,86 @@
+{
+  "pill": {
+    "high": "High",
+    "low": "Low",
+    "neutral": "Average"
+  },
+  "status": {
+    "waiting": "Waiting to load data…",
+    "loading": "Loading teams, standings, and recent schedule…",
+    "updated": "Updated: {{time}}",
+    "failed": "Load failed"
+  },
+  "a11y": {
+    "skipToContent": "Skip to content",
+    "toggleTheme": "Toggle dark mode",
+    "summaryCards": "summary cards",
+    "logo": "MLB Margin logo"
+  },
+  "title": "MLB Run-Differential Dashboard",
+  "subtitle": "Fetches MLB Stats API in the browser to show schedules, standings, and blowout tendencies.",
+  "nav": {
+    "home": "← Home"
+  },
+  "actions": {
+    "refresh": "Refresh"
+  },
+  "lang": {
+    "switch": "Language",
+    "en": "English",
+    "zhHant": "繁體中文"
+  },
+  "hero": {
+    "purposeLabel": "About this page",
+    "purposeText": "This page demonstrates reading the public MLB Stats API from the frontend: today's schedule and league standings, then classifying recent games by margin (1 run, 2 runs, more than 2). Extend it into the run-differential tool you had in mind.",
+    "statusLabel": "Status",
+    "statusNote": "Default scope: all MLB teams, today's schedule, last 30 completed games per team."
+  },
+  "stats": {
+    "gamesToday": "Games today",
+    "teamsAnalyzed": "Teams analyzed",
+    "highMarginTeams": "High blowout count"
+  },
+  "filters": {
+    "title": "Filters",
+    "note": "Filter by division, search team names, or adjust the “more than 2 runs” share threshold.",
+    "teamSearch": "Team search",
+    "teamPlaceholder": "e.g. Giants",
+    "division": "Division",
+    "all": "All",
+    "threshold": "Blowout threshold",
+    "thresholdAll": "All teams",
+    "displayMode": "Display mode",
+    "winsOnly": "Wins only",
+    "lossesOnly": "Losses only"
+  },
+  "analysis": {
+    "title": "Team run-differential analysis",
+    "note": "Last 30 completed games, split by 1-run, 2-run, and 3+ margins, flagged against your threshold."
+  },
+  "loading": "Loading…",
+  "error": {
+    "loadFailed": "Failed to load data: {{error}}"
+  },
+  "noTeams": "No teams match your filters.",
+  "table": {
+    "team": "Team",
+    "division": "Division",
+    "record": "Record",
+    "winMargin": "Wins 1-2-3+",
+    "winOver2Pct": "Wins 3+ %",
+    "lossMargin": "Losses 1-2-3+",
+    "lossOver2Pct": "Losses 3+ %",
+    "verdict": "Verdict"
+  },
+  "recentGames": "Last {{count}} games",
+  "schedule": {
+    "title": "Today's schedule",
+    "note": "Today's MLB games and start times from the official schedule endpoint.",
+    "empty": "No games scheduled today.",
+    "matchup": "Matchup",
+    "time": "Time",
+    "status": "Status",
+    "score": "Score"
+  },
+  "footer": "Data source: MLB Stats API. Fetched directly from the public API in the browser."
+}
