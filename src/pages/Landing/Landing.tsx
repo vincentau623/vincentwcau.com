@@ -1,7 +1,8 @@
 import { Box, Typography, Link } from "@mui/material";
-import MiniProjects from "../../components/MiniProjects";
-import Projects from "../../components/Projects";
-import TechStacks from "../../components/TechStacks";
+import BlueJays from "./components/BlueJays";
+import MiniProjects from "./components/MiniProjects";
+import Projects from "./components/Projects";
+import TechStacks from "./components/TechStacks";
 
 const Landing = () => {
     return (
@@ -83,6 +84,21 @@ const Landing = () => {
                     Mini Projects
                 </Typography>
                 <MiniProjects />
+            </Box>
+            <Box
+                component="section"
+                id="bluejays"
+                style={{ padding: 16, marginTop: 16 }}
+            >
+                <Typography
+                    variant="h5"
+                    component="h2"
+                    gutterBottom
+                    style={{ fontFamily: "Bitter, serif", fontWeight: 700 }}
+                >
+                    Let&apos;s Go Blue Jays
+                </Typography>
+                <BlueJays />
             </Box>
             <Box
                 component="section"
