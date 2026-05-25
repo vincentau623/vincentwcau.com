@@ -1,7 +1,7 @@
 {
   "name": "vincentwcau.com",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -33,7 +33,7 @@
     "typescript": "~6.0.3",
     "globals": "^17.6.0",
     "typescript-eslint": "^8.59.4",
-    "vite": "^7.3.2"
+    "vite": "^8.0.14"
   },
   "pnpm": {
     "overrides": {
